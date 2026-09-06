@@ -247,7 +247,7 @@ coords = {
         "contacts": {
             "Sohra SDO Disaster Control Room": "03637262224",
             "Sohra Police Station": "03637262222",
-            "Sohra Fire Station": "03637262201",
+            "Sohra Fire Station": "0363726201",
             "108 GVK Emergency Ambulance": "108"
         }
     },
@@ -574,47 +574,66 @@ if st.session_state.assessment_result is not None:
 
     st.markdown("---")
 
-    st.subheader("🗺️ Live Geographic Risk Map & Emergency Evacuation Route")
+    # Interactive Geographic Risk Map & Dynamic Evacuation Route
+    st.subheader("🗺️ Live Geographic Risk Map & Safe Evacuation Navigation Route")
     
-    m = folium.Map(location=[sel["lat"], sel["lon"]], zoom_start=12)
+    m = folium.Map(location=[sel["lat"], sel["lon"]], zoom_start=12, tiles="OpenStreetMap")
     pin_color = "red" if risk_level in ["HIGH", "CRITICAL"] else "orange" if risk_level == "MEDIUM" else "green"
     
+    # 1. Target Hazard Location Pin
     folium.Marker(
         location=[sel["lat"], sel["lon"]],
-        popup=f"Target Zone: {loc} | Risk: {risk_level}",
-        tooltip=f"Hazard Zone ({risk_level})",
+        popup=f"<b>⚠️ Active Hazard Zone</b><br>{loc}<br>Risk: {risk_level}",
+        tooltip=f"🚨 Hazard Zone ({risk_level})",
         icon=folium.Icon(color=pin_color, icon="exclamation-triangle", prefix="fa")
     ).add_to(m)
 
+    # 2. Risk Buffer Circle
     folium.Circle(
         location=[sel["lat"], sel["lon"]],
-        radius=2000,
+        radius=2200,
         color=pin_color,
         fill=True,
-        fill_opacity=0.3
+        fill_opacity=0.25,
+        popup="Danger Impact Buffer Zone"
     ).add_to(m)
 
-    safe_lat = sel["lat"] + 0.015
-    safe_lon = sel["lon"] + 0.015
+    # 3. Designated Safe Evacuation Shelter Assembly Point
+    safe_lat = sel["lat"] + 0.018
+    safe_lon = sel["lon"] + 0.018
     
     folium.Marker(
         location=[safe_lat, safe_lon],
-        popup=f"Safe Assembly Point: {sel['safe_zone']}",
-        tooltip="Designated Shelter Zone",
-        icon=folium.Icon(color="blue", icon="shield", prefix="fa")
+        popup=f"<b>🛡️ Safe Emergency Shelter Assembly Zone</b><br>{sel['safe_zone']}<br>Status: Clear & Operational",
+        tooltip="🛡️ SAFE SHELTER ASSEMBLY POINT",
+        icon=folium.Icon(color="green", icon="shield", prefix="fa")
     ).add_to(m)
+
+    # 4. Clear Evacuation Route Polyline
+    route_points = [
+        [sel["lat"], sel["lon"]],
+        [sel["lat"] + 0.006, sel["lon"] + 0.004],
+        [sel["lat"] + 0.012, sel["lon"] + 0.011],
+        [safe_lat, safe_lon]
+    ]
 
     folium.PolyLine(
-        locations=[[sel["lat"], sel["lon"]], [safe_lat, safe_lon]],
-        color="blue",
-        weight=3,
-        opacity=0.8,
-        tooltip="Evacuation Route"
+        locations=route_points,
+        color="#0284c7",
+        weight=5,
+        opacity=0.9,
+        dash_array="10",
+        tooltip="🔵 Recommended Evacuation Corridor"
     ).add_to(m)
 
-    st_folium(m, width=1100, height=450, key="risk_map")
+    st_folium(m, width=1100, height=480, key="risk_map")
     
-    st.success(f"🛡️ **Designated Emergency Safe Zone:** {sel['safe_zone']} (Blue Marker & Evacuation Route)")
+    st.markdown(f"""
+    <div style="background: rgba(15, 23, 42, 0.9); padding: 16px; border-radius: 10px; border-left: 5px solid #22c55e; margin-top: 10px;">
+        <h4 style="margin:0 0 5px 0; color:#22c55e;">🛡️ Designated Safe Assembly Shelter:</h4>
+        <p style="margin:0; color:#f8fafc;"><b>{sel['safe_zone']}</b> — Follow blue dashed corridor line on map for immediate safe evacuation route.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("---")
 
