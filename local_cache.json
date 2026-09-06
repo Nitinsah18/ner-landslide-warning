@@ -1,0 +1,39 @@
+{
+    "data": {
+        "location": "Sikkim - Mangan (North Sikkim HQ)",
+        "risk_level": "HIGH",
+        "risk_score": 58,
+        "primary_triggers": [
+            "Monsoonal Rainfall",
+            "Terrain Slope (45\u00b0)",
+            "Soil Saturation"
+        ],
+        "recommended_action": "Issue advisory for hilly road trips. Monitor soil saturation sensors.",
+        "alert_required": true
+    },
+    "weather": {
+        "rainfall_24h_mm": 15.2,
+        "soil_moisture": 0.3
+    },
+    "sensor": {
+        "tiltmeter_displacement_mm": 1.18,
+        "piezometer_pore_pressure_kpa": 82.8,
+        "seismic_vibration_g": 0.021
+    },
+    "location": "Sikkim - Mangan (North Sikkim HQ)",
+    "selected": {
+        "lat": 27.5167,
+        "lon": 88.5333,
+        "slope": 45,
+        "safe_zone": "Mangan Helipad Open Zone",
+        "blocked_road": "North Sikkim Highway",
+        "alt_route": "Via Phodong-Chungthang Secondary Feeder",
+        "contacts": {
+            "Mangan District Disaster Control Room": "1077",
+            "Mangan Police Station": "03592234224",
+            "Mangan Fire & Rescue Station": "03592234201",
+            "Mangan District Hospital": "03592234215",
+            "Chungthang Army Rescue Base": "03592234222"
+        }
+    }
+}
